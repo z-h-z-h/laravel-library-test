@@ -2,7 +2,7 @@
 
 namespace App;
 
-use Carbon\Carbon;
+use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property int $book_id
  * @property-read \App\Book $book
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Journal filterByDate(\Carbon\Carbon $from = null, \Carbon\Carbon $to = null)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Journal filterByDate(\Carbon\CarbonInterface $from = null, \Carbon\CarbonInterface $to = null)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Journal newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Journal newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Journal query()
@@ -45,7 +45,7 @@ class Journal extends Model
         return $this->belongsTo(Book::class);
     }
 
-    public function scopeFilterByDate(Builder $query, Carbon $from = null, Carbon $to = null)
+    public function scopeFilterByDate(Builder $query, CarbonInterface $from = null, CarbonInterface $to = null)
     {
         if (is_null($from) && is_null($to)) {
             return $query;
