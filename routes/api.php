@@ -26,7 +26,8 @@ Route::get('authors/{author}', [AuthorController::class, 'show']);
 Route::put('authors/{author}', [AuthorController::class, 'update']);
 Route::delete('authors/{author}', [AuthorController::class, 'destroy']);
 
-Route::get('books/stat', BookStatController::class);
+Route::get('books/stat', [BookStatController::class, 'stat']);
+Route::get('books/stat-alternative', [BookStatController::class, 'statAlternative']);
 
 Route::get('books', [BookController::class, 'index']);
 Route::post('books', [BookController::class, 'store']);

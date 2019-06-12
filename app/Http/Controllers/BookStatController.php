@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\GetBookStat;
 use App\Http\Resources\StatResource;
 use App\Services\JournalStatService;
 use Carbon\Carbon;
@@ -33,7 +34,7 @@ class BookStatController extends Controller
      *
      * @return AnonymousResourceCollection
      */
-    public function __invoke(Request $request)
+    public function stat(Request $request)
     {
         try {
             $from = Carbon::createFromIsoFormat('DD-MM-YYYY', $request->input('from'))->toImmutable();
@@ -49,4 +50,27 @@ class BookStatController extends Controller
 
         return StatResource::collection($stat);
     }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @param GetBookStat $request
+     *
+     * @return AnonymousResourceCollection
+     */
+    public function statAlternative(GetBookStat $request)
+    {
+        $data = $request->validated();
+
+        $from = Carbon::createFromIsoFormat('DD-MM-YYYY', $data['from'])->toImmutable();
+        $to = Carbon::createFromIsoFormat('DD-MM-YYYY', $data['to'])->toImmutable();
+
+        $stat = collect($this->service->getPerBookByPeriod($from->startOfDay(), $to->endOfDay()))
+            ->merge($this->service->getTotalPerMonths($from->startOfMonth(), $to->endOfMonth()))
+            ->merge($this->service->getTotalPerYears())
+            ->merge([['value' => $this->service->getTotalByPeriod()]]);
+
+        return StatResource::collection($stat);
+    }
+
 }
